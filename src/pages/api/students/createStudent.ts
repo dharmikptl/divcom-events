@@ -5,14 +5,19 @@ export default async function createStudent(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { name, email, password } = req.body
+  const { fname, mname, lname, email, rollnumber, sectionId, standardId } =
+    req.body
 
   try {
-    const student = await prisma.student.create({
+    const student = await prisma.students.create({
       data: {
-        name,
+        fname,
+        mname,
+        lname,
         email,
-        password
+        rollnumber,
+        sectionId,
+        standardId
       }
     })
 

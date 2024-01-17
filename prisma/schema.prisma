@@ -10,11 +10,79 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Student {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String?
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Students {
+  id         String    @id @default(uuid())
+  rollnumber String    @unique
+  email      String    @unique
+  fname      String?
+  mname      String?
+  lname      String?
+  sectionId  String? //fk
+  section    section?  @relation(fields: [sectionId], references: [id])
+  standardId String? //fk
+  standard   standard? @relation(fields: [standardId], references: [id])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  parents    parents?
+  results    results[]
+}
+
+model subjects {
+  id          String    @id @default(uuid())
+  SubjectName String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  results     results[]
+  test        test[]
+}
+
+model standard {
+  id           String     @id @default(uuid())
+  standardName String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  students     Students[]
+}
+
+model section {
+  id          String     @id @default(uuid())
+  sectionName String
+  students    Students[]
+}
+
+model parents {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  fname     String
+  mname     String
+  lname     String
+  mobile    String
+  studentId String?   @unique //fk
+  students  Students? @relation(fields: [studentId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model results {
+  id        String    @id @default(uuid())
+  studentId String? //fk
+  subjectId String? //fk
+  testId    String? //fk
+  marks     Int
+  student   Students? @relation(fields: [studentId], references: [id])
+  subject   subjects? @relation(fields: [subjectId], references: [id])
+  test      test?     @relation(fields: [testId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model test {
+  id         String    @id @default(uuid())
+  testName   String
+  subjectId  String? //fk
+  subject    subjects? @relation(fields: [subjectId], references: [id])
+  totalMarks Int
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  results    results[]
 }
