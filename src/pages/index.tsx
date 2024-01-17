@@ -8,11 +8,11 @@ export default function Home() {
     >
       <Button
         onClick={() => {
-          fetch('/api/createStudent', {
+          fetch('/api/students/createStudent', {
             method: 'POST',
             body: JSON.stringify({
-              name: 'dhruv',
-              email: 'dhruv@gmail.com',
+              name: 'daksh',
+              email: 'daksh@gmail.com',
               password: '123456'
             }),
             headers: {
