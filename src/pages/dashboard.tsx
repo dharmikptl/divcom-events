@@ -1,5 +1,5 @@
-'use client'
 import { Card, Col, Row, Typography } from 'antd'
+import { useEffect, useState } from 'react'
 
 export const pastEventsAttended = [
   {
@@ -53,7 +53,18 @@ export const pastEventsAttended = [
     image: 'https://via.placeholder.com/150'
   }
 ]
-export default function dashBoard() {
+export default function Dashboard() {
+  const [pastEvents, setPastEvents] = useState<any[]>([])
+
+  useEffect(() => {
+    const events = JSON.parse(
+      localStorage.getItem('pastEventsAttended') || '[]'
+    )
+    console.log(events)
+
+    setPastEvents(events)
+  }, [])
+
   return (
     <div className="p-5">
       <div className="flex items-center gap-5">
@@ -79,7 +90,7 @@ export default function dashBoard() {
           >
             Past Events Attended
           </Typography.Title>
-          {pastEventsAttended.map(event => (
+          {pastEvents?.map((event: any) => (
             <Col xs={24} key={event.id}>
               <Card hoverable>
                 <div className="flex items-center justify-between">

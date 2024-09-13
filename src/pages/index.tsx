@@ -53,7 +53,14 @@ export default function Home() {
             </Col>
           </Row>
           <Col span={24} className="flex items-start justify-center">
-            <Button htmlType="submit" type="primary">
+            <Button
+              size="large"
+              htmlType="submit"
+              style={{
+                backgroundColor: '#1890ff',
+                color: 'white'
+              }}
+            >
               Verify
             </Button>
           </Col>

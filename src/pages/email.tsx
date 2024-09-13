@@ -6,7 +6,6 @@ export default function Email() {
   const email = searchParams.get('email')
   const eventId = searchParams.get('eventId')
   const pathname = useRouter()
-  console.log(eventId)
   useEffect(() => {
     if (
       email !== 'user@gmail.com' &&
@@ -74,7 +73,15 @@ export default function Email() {
           </Row>
           <Row gutter={[16, 16]} className="mt-5">
             <Col span={24} className="flex items-start justify-center">
-              <Button size="large" htmlType="submit" type="primary">
+              <Button
+                size="large"
+                htmlType="submit"
+                style={{
+                  backgroundColor: '#1890ff',
+                  color: 'white'
+                }}
+                type="primary"
+              >
                 Login
               </Button>
             </Col>

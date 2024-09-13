@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 export default function Register() {
   const searchParams = useSearchParams()
   const email = searchParams.get('email')
+  const eventId = searchParams.get('eventId')
   const pathname = useRouter()
   return (
     <div className="h-screen flex items-center justify-center">
@@ -15,7 +16,7 @@ export default function Register() {
           }}
           onFinish={value => {
             localStorage.setItem('user', JSON.stringify(value))
-            pathname.push('/email')
+            pathname.push(`/email?eventId=${eventId}`)
           }}
         >
           <Row gutter={[16, 16]} className="flex items-center">
@@ -122,7 +123,14 @@ export default function Register() {
           </Row>
           <Row gutter={[16, 16]} className="mt-5">
             <Col span={24} className="flex items-start justify-center">
-              <Button size="large" htmlType="submit" type="primary">
+              <Button
+                size="large"
+                htmlType="submit"
+                style={{
+                  backgroundColor: '#1890ff',
+                  color: 'white'
+                }}
+              >
                 Register
               </Button>
             </Col>

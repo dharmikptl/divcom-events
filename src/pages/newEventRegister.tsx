@@ -1,6 +1,6 @@
-import { Button, Card, Typography } from 'antd'
-import jsforce from 'jsforce'
+import { Button, Card, message, Typography } from 'antd'
 import { useSearchParams } from 'next/navigation'
+import { useEffect } from 'react'
 import { pastEventsAttended } from './dashboard'
 
 export const newEvents = [
@@ -58,6 +58,12 @@ export const newEvents = [
 export default function NewEventRegister() {
   const searchParams = useSearchParams()
   const eventId = searchParams.get('eventId')
+  useEffect(() => {
+    if (JSON.parse(localStorage.getItem('user') || '{}').email === undefined) {
+      window.location.href = '/?eventId=' + eventId
+    }
+  }, [eventId])
+
   return pastEventsAttended.find(event => event.id === Number(eventId)) ? (
     <div className="h-screen flex items-center justify-center">
       <Card className="w-3/4 shadow-xl py-8">
@@ -87,16 +93,42 @@ export default function NewEventRegister() {
               <Typography.Paragraph>{event.description}</Typography.Paragraph>
               <Button
                 size="large"
-                type="primary"
+                style={{
+                  backgroundColor: '#1890ff',
+                  color: 'white'
+                }}
                 onClick={async () => {
-                  const conn = new jsforce.Connection({
-                    loginUrl: 'https://umang85patel-dev-ed.my.salesforce.com'
+                  fetch('/api/hello', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      eventName: event.name,
+                      userFullName:
+                        JSON.parse(localStorage.getItem('user') || '{}')
+                          .firstName +
+                        ' ' +
+                        JSON.parse(localStorage.getItem('user') || '{}')
+                          .lastName,
+                      email: JSON.parse(localStorage.getItem('user') || '{}')
+                        .email,
+                      location: event.location
+                    })
+                  }).then(response => {
+                    if (response.ok) {
+                      response.json().then(async data => {
+                        if (data.success) {
+                          localStorage.setItem(
+                            'pastEventsAttended',
+                            JSON.stringify([...pastEventsAttended, event])
+                          )
+                          await message.success('Registration Success')
+                          window.location.href = '/dashboard'
+                        }
+                      })
+                    }
                   })
-                  const userInfo = await conn.login(
-                    'umang85patel@gmail.com',
-                    'Mkteq@win242A7rNz2KOz0DxBSwvOVeUa6hez'
-                  )
-                  console.log(userInfo)
                 }}
               >
                 Register

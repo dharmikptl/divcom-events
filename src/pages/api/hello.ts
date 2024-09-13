@@ -2,11 +2,8 @@
 import jsforce from 'jsforce'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-type Data = {
-  name: string
-}
-
-const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { eventName, userFullName, email, location } = req.body
   const conn = new jsforce.Connection({
     loginUrl: 'https://umang85patel-dev-ed.my.salesforce.com'
   })
@@ -14,8 +11,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     'umang85patel@gmail.com',
     'Mkteq@win242A7rNz2KOz0DxBSwvOVeUa6hez'
   )
-  console.log(userInfo)
-  res.status(200).json({ name: 'John Doe' })
+  const ret = await conn.sobject('Event_Registrations__c').create({
+    Name: eventName,
+    Attendee_Name__c: userFullName,
+    Email__c: email,
+    Location__c: location
+  })
+  res.status(200).json(ret)
 }
 
 export default handler
