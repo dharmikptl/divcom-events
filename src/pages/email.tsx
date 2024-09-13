@@ -1,31 +1,43 @@
+'use client'
 import { Button, Card, Col, Form, Input, message, Row, Typography } from 'antd'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
+
 export default function Email() {
+  const [userPassword, setUserPassword] = useState<string | null>(null)
   const searchParams = useSearchParams()
   const email = searchParams.get('email')
   const eventId = searchParams.get('eventId')
-  const pathname = useRouter()
+  const router = useRouter()
+
+  useEffect(() => {
+    // Ensure this runs only in the browser
+    if (typeof window !== 'undefined') {
+      const userPass = JSON.parse(localStorage.getItem('user') || '{}').password
+      setUserPassword(userPass || null)
+    }
+  }, [])
+
+  const handleFinish = (value: any) => {
+    if (value.password === 'user@1234' || value.password === userPassword) {
+      if (eventId === 'null' || eventId === null) {
+        router.push('/dashboard')
+        message.success('Login Success')
+      } else {
+        router.push(`/newEventRegister?eventId=${eventId}`)
+        message.success('Login Success')
+      }
+    } else {
+      message.error('Invalid Password')
+    }
+  }
 
   return (
     <div className="h-screen flex items-center justify-center">
       <Card className="w-3/4 shadow-xl py-8">
         <Form
           onFinish={value => {
-            if (
-              value.password === 'user@1234' ||
-              value.password ===
-                JSON.parse(localStorage.getItem('user') || '{}').password
-            ) {
-              if (eventId === 'null' || eventId === null) {
-                pathname.push('/dashboard')
-                message.success('Login Success')
-              } else {
-                pathname.push(`/newEventRegister?eventId=${eventId}`)
-                message.success('Login Success')
-              }
-            } else {
-              message.warning('invalid password')
-            }
+            handleFinish(value)
           }}
         >
           <Row gutter={[16, 16]} className="flex items-center">
@@ -34,7 +46,9 @@ export default function Email() {
                 Hiii,{' '}
                 {email
                   ? email
-                  : JSON.parse(localStorage.getItem('user') || '{}').email}
+                  : typeof window !== 'undefined'
+                  ? JSON.parse(localStorage.getItem('user') || '{}').email
+                  : 'User'}
               </Typography.Title>
               <Typography.Text type="secondary">
                 Verify Your Password
