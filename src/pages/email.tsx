@@ -1,20 +1,10 @@
 import { Button, Card, Col, Form, Input, message, Row, Typography } from 'antd'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
 export default function Email() {
   const searchParams = useSearchParams()
   const email = searchParams.get('email')
   const eventId = searchParams.get('eventId')
   const pathname = useRouter()
-  useEffect(() => {
-    if (
-      email !== 'user@gmail.com' &&
-      !JSON.parse(localStorage.getItem('user') || '{}').email
-    ) {
-      alert('Email Not Verified')
-      pathname.push('/')
-    }
-  }, [email, pathname])
 
   return (
     <div className="h-screen flex items-center justify-center">
