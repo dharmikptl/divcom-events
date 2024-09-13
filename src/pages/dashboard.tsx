@@ -58,7 +58,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     const events = JSON.parse(
-      localStorage.getItem('pastEventsAttended') || '[]'
+      localStorage.getItem('pastEventsAttended') || `${pastEventsAttended}`
     )
     console.log(events)
 
