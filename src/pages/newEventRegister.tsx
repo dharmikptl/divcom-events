@@ -1,5 +1,5 @@
 import { Button, Card, message, Typography } from 'antd'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 import { pastEventsAttended } from './dashboard'
 
@@ -58,6 +58,7 @@ export const newEvents = [
 export default function NewEventRegister() {
   const searchParams = useSearchParams()
   const eventId = searchParams.get('eventId')
+  const pathname = useRouter()
   useEffect(() => {
     if (JSON.parse(localStorage.getItem('user') || '{}').email === undefined) {
       window.location.href = '/?eventId=' + eventId
@@ -68,11 +69,19 @@ export default function NewEventRegister() {
     <div className="h-screen flex items-center justify-center">
       <Card className="w-3/4 shadow-xl py-8">
         <Typography.Title
-          className="flex items-center justify-center"
+          className="flex flex-col items-center justify-center"
           level={3}
         >
           {' '}
-          You was Already attended this event: {eventId}
+          You have already registered for this event with id: {eventId}
+          <span
+            onClick={() => {
+              pathname.push('/dashboard')
+            }}
+            className="text-blue-500 cursor-pointer hover:text-blue-900"
+          >
+            Go to Dashboard
+          </span>
         </Typography.Title>
       </Card>
     </div>
@@ -145,7 +154,7 @@ export default function NewEventRegister() {
           level={3}
         >
           {' '}
-          This Event Is not exist: {eventId}
+          This Event does not exist with id: {eventId}
         </Typography.Title>
       </Card>
     </div>
